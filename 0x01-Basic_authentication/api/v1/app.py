@@ -25,10 +25,10 @@ def not_found(error) -> str:
 def unauthorized(error) -> str:
     """Unauthorized handler
     """
-    response = jsonify({"error": "Unauthorized"})
-    response.status_code = 401
-    response.headers['Content-Type'] = 'application/json'
-    return response
+    return jsonify({"error": "Unauthorized"}), 401
+    # response.status_code = 401
+    # response.headers['Content-Type'] = 'application/json'
+    # return response
 
 
 if __name__ == "__main__":
