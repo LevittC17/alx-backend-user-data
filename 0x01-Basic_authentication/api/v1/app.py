@@ -26,9 +26,13 @@ def unauthorized(error) -> str:
     """Unauthorized handler
     """
     return jsonify({"error": "Unauthorized"}), 401
-    # response.status_code = 401
-    # response.headers['Content-Type'] = 'application/json'
-    # return response
+
+
+@app.errorhandler(403)
+def forbidden(error) -> str:
+    """Authenticate Error Handler
+    """
+    return jsonify({"error": "Forbidden"}), 403
 
 
 if __name__ == "__main__":
