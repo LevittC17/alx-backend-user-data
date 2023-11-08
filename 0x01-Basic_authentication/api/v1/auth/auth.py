@@ -13,6 +13,7 @@ class Auth:
     """
     Class template for all authentication system to implement
     """
+
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
         Placeholder for requiring authentication
@@ -22,7 +23,16 @@ class Auth:
         Returns:
           - bool: False for now
         """
-        return False
+        if path is None:
+            return True
+
+        if excluded_paths is None or not excluded_paths:
+            return False
+
+        # Check if the path (with or without a trailing slash) is in the
+        # excluded_paths
+        normalized_path = path.rstrip('/')
+        return normalized_path not in excluded_paths
 
     def authorization_header(self, request=None) -> str:
         """
