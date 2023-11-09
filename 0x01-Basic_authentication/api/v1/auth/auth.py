@@ -23,18 +23,17 @@ class Auth:
         Returns:
           - bool: False for now
         """
-        # if path is None:
-        #    return True
+        if path is None:
+            return True
 
-        # if excluded_paths is None or not excluded_paths:
-        #    return False
+        if excluded_paths is None or not excluded_paths:
+            return False
 
         # Check if the path (with or without a trailing slash) is in the
-        # excluded_paths
-        # normalized_path = path.rstrip('/')
-        # return not any(normalized_path.startswith(e.rstrip('/'))
-        #               for e in excluded_paths)
-        return False
+        excluded_paths
+        normalized_path = path.rstrip('/')
+        return not any(normalized_path == e.rstrip('/')
+                       for e in excluded_paths)
 
     def authorization_header(self, request=None) -> str:
         """
