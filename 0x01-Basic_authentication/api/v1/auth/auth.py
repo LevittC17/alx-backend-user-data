@@ -53,7 +53,3 @@ class Auth:
           TypeVar('User'): None for now
         """
         return None
-
-
-class BasicAuth(Auth):
-    pass
