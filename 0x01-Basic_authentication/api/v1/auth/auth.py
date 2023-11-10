@@ -28,7 +28,7 @@ class Auth:
 
         normalized_path = path.rstrip('/') + '/'
 
-        return not any(fnmatch.fnmatch(normalized_path, e.rstrip('/') + '/*')
+        return not any(fnmatch.fnmatchcase(normalized_path, e.rstrip('/') + '*')
                        for e in excluded_paths)
 
     def authorization_header(self, request=None) -> str:
