@@ -23,8 +23,7 @@ class Auth:
         Returns:
           - bool: False for now
         """
-        if not path or not excluded_paths or not excluded_paths \
-                or not path.strip('/'):
+        if not path or not excluded_paths:
             return True
 
         normalized_path = path.rstrip('/') + '/'
