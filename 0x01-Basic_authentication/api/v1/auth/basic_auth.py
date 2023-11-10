@@ -5,6 +5,7 @@ Class inheritance
 """
 
 from api.v1.auth.auth import Auth
+import base64
 
 
 class BasicAuth(Auth):
@@ -26,3 +27,19 @@ class BasicAuth(Auth):
             return None
 
         return authorization_header.split(' ')[1]
+
+    def decode_base64_authorization_header(self, base64_authorization_header:
+                                           str) -> str:
+        """
+        Decodes the Base64 Authorization header for Basic Auth
+        """
+        if base64_authorization_header is None or not isinstance(
+                base64_authorization_header, str):
+            return None
+
+        try:
+            decode_bytes = base64.b64decode(base64_authorization_header)
+            decode_string = decode_bytes.decode('utf-8')
+            return decode_string
+        except base64.binascii.Error:
+            return None
