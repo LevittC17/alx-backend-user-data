@@ -7,6 +7,7 @@ Create a class to manage the API authentication
 
 from flask import request
 from typing import List, TypeVar
+import fnmatch
 
 
 class Auth:
