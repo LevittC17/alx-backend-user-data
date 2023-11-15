@@ -7,6 +7,8 @@ DB Module
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 
 from user import Base, User
 
@@ -47,3 +49,19 @@ class DB:
         self._session.add(new_user)
         self._session.commit()
         return new_user
+
+    def find_user_by(self, **kwargs) -> User:
+        """
+        Find a user in the database on the provided keyword arguments
+        Args:
+            **kwargs: Arbitrary keyword arguments for filtering the query
+        Returns:
+            NoResultFound: If no user is found
+            InvalidRequestError: If wrong query arguments are passed
+        """
+        try:
+            return self._session.query(User).filter_by(**kwargs).one()
+        except NoResultFound:
+            raise NoResultFound('No user found')
+        except InvalidRequestError:
+            raise InvalidRequestError('Invalid query arguments')
