@@ -40,3 +40,25 @@ You will need to install `bcrypt`
 ```bash
 pip3 install bcrypt
 ```
+
+# alx-backend-user-data
+
+## 0x03 User Authentication Service
+
+This project implements a user authentication service with a backend using Python3 and Flask. Below are the tasks completed:
+
+### Task 0: User Model
+
+- File: `user.py`
+- Class: `User`
+  - Attributes:
+    - id: int (primary key, non-nullable)
+    - email: str (non-nullable)
+    - hashed_password: str (non-nullable)
+    - session_id: str (nullable)
+    - reset_token: str (nullable)
+
+### Task 1: ...
+
+...
+
