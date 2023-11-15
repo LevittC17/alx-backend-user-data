@@ -59,9 +59,16 @@ class DB:
             NoResultFound: If no user is found
             InvalidRequestError: If wrong query arguments are passed
         """
-        try:
-            return self._session.query(User).filter_by(**kwargs).one()
-        except NoResultFound:
-            raise NoResultFound('No user found')
-        except InvalidRequestError:
+        allowed_keys = {'id', 'email', 'hashed_password', 'session_id',
+                        'reset_token'}
+        invalid_keys = set(kwargs.keys()) - allowed_keys
+
+        if invalid_keys:
             raise InvalidRequestError('Invalid query arguments')
+
+        result = self._session.query(User).filter_by(**kwargs).first()
+
+        if result is None:
+            raise NoResultFound('No user found')
+
+        return result
