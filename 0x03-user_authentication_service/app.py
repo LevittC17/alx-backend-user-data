@@ -89,22 +89,15 @@ def logout():
         Response: The response with appropriate status and redirection
     """
     session_id = request.cookies.get('session_id', None)
-
-    if session_id is None:
-        # No session ID provided in the request, respond with 403 Forbidden
-        return make_response(jsonify({'message': 'Forbidden'}), 403)
-
     user = AUTH.get_user_from_session_id(session_id)
 
-    if user is not None:
-        # User found, destroy the session
-        AUTH.destroy_session(user.id)
+    if session_id is None or user is None:
+        # No session ID provided in the request, respond with 403 Forbidden
+        abort(403)
 
-        # Redirect the user to GET /
-        return redirect('/', code=302)
-    else:
-        # User not found, respond with 403 Forbidden
-        return make_response(jsonify({'message': 'Forbidden'}), 403)
+    # User found, destroy the session
+    AUTH.destroy_session(user.id)
+    return redirect('/')
 
 
 @app.route('/profile', methods=['GET'])
