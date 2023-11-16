@@ -88,11 +88,12 @@ def logout():
     Returns:
         Response: The response with appropriate status and redirection
     """
-    session_id = request.cookies.get('session_id', None)
-    user = AUTH.get_user_from_session_id(session_id)
+    session_cookie = request.cookies.get('session_id', None)
+    user = AUTH.get_user_from_session_id(session_cookie)
 
-    if session_id is None or user is None:
-        # No session ID provided in the request, respond with 403 Forbidden
+    if session_cookie is None or user is None:
+        # No session ID provided in the request, or no user found,
+        # respond with 403 Forbidden
         abort(403)
 
     # User found, destroy the session
