@@ -155,5 +155,36 @@ def get_reset_password_token() -> str:
     return jsonify(response_data), 200
 
 
+@app.route('/reset_password', methods=['PUT'], strict_slashes=False)
+def update_password() -> str:
+    """
+    Update user password based on the reset_token provided.
+
+    This endpoint expects a PUT request with form data containing:
+    - email: User's email address
+    - reset_token: Token to validate the password reset request
+    - new_password: The new password to be set
+
+    If the reset_token is valid, the user's password is updated,
+    and a JSON response with a success message is returned.
+    If the reset_token is invalid, a 403 HTTP response is returned.
+
+    Returns:
+        JSON: {"email": "<user email>", "message": "Password updated"}
+              or {"message": "Invalid reset token"}, HTTP status code 403
+    """
+    try:
+        email = request.form.get('email')
+        reset_token = request.form.get('reset_token')
+        new_password = request.form.get('new_password')
+
+        AUTH.update_password(reset_token, new_password)
+
+        return jsonify({'email': email, 'message': 'Password updated'}), 200
+    except ValueError:
+        # Invalid reset_token
+        abort(403)
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='5000')
