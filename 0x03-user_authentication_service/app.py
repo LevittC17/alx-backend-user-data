@@ -141,13 +141,15 @@ def get_reset_password_token() -> str:
         200 OK - {"email": "<user email>", "reset_token": "<reset token>"}
         403 Forbidden - {"message": "Email not registered"}
     """
+    email = request.form.['email']
+
     try:
-        email = request.form.get('email')
         reset_token = AUTH.get_reset_password_toke(email)
-        response_data = {'email': email, 'reset_token': reset_token}
-        return jsonify(response_data), 200
     except ValueError:
-        return jsonify({'message': 'Email not registered'}), 403
+        abort(403)
+
+    response_data = {'email': email, 'reset_token': reset_token}
+    return jsonify(response_data), 200
 
 
 if __name__ == "__main__":
