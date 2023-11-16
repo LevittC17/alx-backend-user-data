@@ -88,7 +88,7 @@ def logout():
     Returns:
         Response: The response with appropriate status and redirection
     """
-    session_id = request.cookies.get('session_id')
+    session_id = request.cookies.get('session_id', None)
 
     if session_id is None:
         # No session ID provided in the request, respond with 403 Forbidden
