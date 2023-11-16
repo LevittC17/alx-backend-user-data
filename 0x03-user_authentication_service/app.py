@@ -81,5 +81,31 @@ def login():
         return make_response(jsonify({'message': str(e)}), 400)
 
 
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout():
+    """
+    Logout route to destroy the user session
+    Returns:
+        Response: The response with appropriate status and redirection
+    """
+    session_id = request.cookies.get('session_id')
+
+    if session_id is None:
+        # No session ID provided in the request, respond with 403 Forbidden
+        return make_response(jsonify({'message': 'Forbidden'}), 403)
+
+    user = AUTH.get_user_from_session_id(session_id)
+
+    if user is not None:
+        # User found, destroy the session
+        AUTH.destroy_session(user.id)
+
+        # Redirect the user to GET /
+        return redirect('/', code=302)
+    else:
+        # User not found, respond with 403 Forbidden
+        return make_response(jsonify({'message': 'Forbidden'}), 403)
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='5000')
