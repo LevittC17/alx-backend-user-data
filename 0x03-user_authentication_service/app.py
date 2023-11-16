@@ -130,7 +130,7 @@ def profile() -> str:
         abort(403)
 
 
-@app.route('/reset_password', methods=['POST'])
+@app.route('/reset_password', methods=['POST'], strict_slashes=False)
 def get_reset_password_token() -> str:
     """
     Get the reset password token for a user
@@ -142,7 +142,7 @@ def get_reset_password_token() -> str:
         403 Forbidden - {"message": "Email not registered"}
     """
     try:
-        email = request.form['email']
+        email = request.form.get('email')
         reset_token = AUTH.get_reset_password_toke(email)
         response_data = {'email': email, 'reset_token': reset_token}
         return jsonify(response_data), 200
