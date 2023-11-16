@@ -130,7 +130,7 @@ class Auth():
             user = self._db.find_user_by(id=user_id)
 
             # Update the user's session ID to None
-            user.session_id = None
+            self._db.update_user(user.id, session_id=None)            
 
             # Commit the changes to the database
             self._db.commit()
