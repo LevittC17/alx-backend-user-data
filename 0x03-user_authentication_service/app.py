@@ -78,17 +78,12 @@ def logout():
     Returns:
         Response: The response with appropriate status and redirection
     """
-    session_cookie = request.cookies.get('session_id')
-    user = AUTH.get_user_from_session_id(session_cookie)
-
+    session_id = request.cookies.get("session_id")
+    user = AUTH.get_user_from_session_id(session_id)
     if user is None:
-        # No session ID provided in the request, or no user found,
-        # respond with 403 Forbidden
         abort(403)
-
-    # User found, destroy the session
     AUTH.destroy_session(user.id)
-    return redirect('/')
+    return redirect("/")
 
 
 @app.route('/profile', methods=['GET'])
