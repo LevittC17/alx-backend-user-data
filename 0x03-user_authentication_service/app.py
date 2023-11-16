@@ -141,7 +141,10 @@ def get_reset_password_token() -> str:
         200 OK - {"email": "<user email>", "reset_token": "<reset token>"}
         403 Forbidden - {"message": "Email not registered"}
     """
-    email = request.form.['email']
+    try:
+        email = request.form.['email']
+    except KeyError:
+        abort(403)
 
     try:
         reset_token = AUTH.get_reset_password_toke(email)
