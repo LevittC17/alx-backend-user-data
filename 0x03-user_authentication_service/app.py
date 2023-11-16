@@ -130,7 +130,7 @@ def profile() -> str:
         abort(403)
 
 
-@app.route('/reset_password', methods=['POST'], strict_slashes=False)
+@app.route('/reset_password', methods=['POST'])
 def get_reset_password_token() -> str:
     """
     Get the reset password token for a user
@@ -143,7 +143,7 @@ def get_reset_password_token() -> str:
     """
     try:
         email = request.form.['email']
-    except KeyError:
+    except NoResulFound:
         abort(403)
 
     try:
