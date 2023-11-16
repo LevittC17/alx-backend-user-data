@@ -170,17 +170,13 @@ class Auth():
         Raises:
             ValueError: If the reset_token is not found
         """
+        if reset_token is None or password is None:
+            return None
+
         try:
             user = self._db.find_user_by(reset_token=reset_token)
         except NoResultFound:
-            raise ValueError('Reset token not found')
-
-        # Hash the new password
-        hashed_password = self._hash_password(password)
-
-        # Update the user's fields
-        self.hashed_password = hashed_password
-        user.reset_token = None
-
-        # Commit changes to db
-        self._db.commit()
+            raise ValueError
+        hashed_password = _hash_password(password)
+        self._db.update_user(user.id, hashed_password=hashed_password,
+                             reset_token=None)
