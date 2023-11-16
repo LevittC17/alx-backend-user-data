@@ -146,18 +146,15 @@ class Auth():
         Raises:
             ValueError: If the user does not exist
         """
-        user = self._db.find_user_by(email=email)
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            raise ValueError
 
-        if user is not None:
-            # Generate a UUID for the reset password token
-            reset_token = str(uuid.uuid4())
+        # Generate a UUID for the reset password token
+        reset_token = _generate_uuid()
 
-            # Update the user's reset_token field in the db
-            user.reset_token = reset_token
-            self._db.commit()
+        # Update the user's reset_token field in the db
+        self._db.update_user(user.id, reset_token=reset_token)
 
-            return reset_token
-
-        else:
-            # User does not exist, raise a ValueError
-            raise ValueError('User does not exist')
+        return reset_token
