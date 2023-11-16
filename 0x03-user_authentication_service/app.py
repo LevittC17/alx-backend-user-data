@@ -59,26 +59,16 @@ def login():
     Returns:
         Response: Flask response object
     """
-    try:
-        # Extract email and password from form data
-        email = request.form.get('email')
-        password = request.form.get('password')
+    # Extract email and password from form data
+    email = request.form.get('email')
+    password = request.form.get('password')
 
-        # Check if login information is correct
-        user = AUTH.valid_login(email, password)
-        if user:
-            # Create a new session and set session_id as a cookie in
-            # the response
-            session_id = AUTH.create_session(email)
-            response = jsonify({'email': email, 'message': 'logged in'})
-            response.set_cookie('session_id', session_id)
-            return response
-        else:
-            # Unauthorized if login information is incorrect
-            abort(401)
-    except Exception as e:
-        # Bad request if any other exception occurs
-        return make_response(jsonify({'message': str(e)}), 400)
+    if not AUTH.valid_login(email, password):
+        abort(401)
+    session_id = AUTH.create_session(email)
+    response = jsonify({'email': email, 'message': 'logged in'})
+    response.set_cookie('session_id', session_id)
+    return response
 
 
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
