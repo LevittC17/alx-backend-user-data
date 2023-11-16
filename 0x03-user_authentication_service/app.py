@@ -173,17 +173,16 @@ def update_password() -> str:
         JSON: {"email": "<user email>", "message": "Password updated"}
               or {"message": "Invalid reset token"}, HTTP status code 403
     """
+    email = request.form.get('email')
+    reset_token = request.form.get('reset_token')
+    new_password = request.form.get('new_password')
+
     try:
-        email = request.form.get('email')
-        reset_token = request.form.get('reset_token')
-        new_password = request.form.get('new_password')
-
         AUTH.update_password(reset_token, new_password)
-
-        return jsonify({'email': email, 'message': 'Password updated'}), 200
-    except ValueError:
-        # Invalid reset_token
+    except Exception:
         abort(403)
+
+    return jsonify({'email': email, 'message': 'Password updated'}), 200
 
 
 if __name__ == "__main__":
