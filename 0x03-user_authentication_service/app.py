@@ -107,5 +107,28 @@ def logout():
         return make_response(jsonify({'message': 'Forbidden'}), 403)
 
 
+@app.route('/profile', methods=['GET'])
+def profile() -> str:
+    """
+    Profile route to retrieve user profile based on session ID.
+    Returns:
+        Response: The response with appropriate status and JSON payload.
+    """
+    session_id = request.cookies.get('session_id')
+
+    if session_id is None:
+        # No session ID provided in the request, respond with 403 Forbidden
+        abort(403)
+
+    user = AUTH.get_user_from_session_id(session_id)
+
+    if user is not None:
+        # User found, respond with 200 OK and user profile JSON payload
+        return jsonify({"email": user.email}), 200
+    else:
+        # User not found, respond with 403 Forbidden
+        abort(403)
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='5000')
