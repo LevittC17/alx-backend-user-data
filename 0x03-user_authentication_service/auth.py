@@ -135,3 +135,29 @@ class Auth():
         except NoResultFound:
             # User not found, do nothing
             pass
+
+    def get_reset_password_token(self, email: str) -> str:
+        """
+        Generate a reset password token for the user
+        Args:
+            email (str): The email of the user
+        Returns:
+            str: The generated reset password token
+        Raises:
+            ValueError: If the user does not exist
+        """
+        user = self._db.find_user_by(email=email)
+
+        if user is not None:
+            # Generate a UUID for the reset password token
+            reset_token = str(uuid.uuid4())
+
+            # Update the user's reset_token field in the db
+            user.reset_token = reset_token
+            self._db.commit()
+
+            return reset_token
+
+        else:
+            # User does not exist, raise a ValueError
+            raise ValueError('User does not exist')
