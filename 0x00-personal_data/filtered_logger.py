@@ -18,10 +18,31 @@ class RedactingFormatter(logging.Formatter):
     SEPARATOR = ";"
 
     def __init__(self, fields: List[str]):
+        """
+        Initialize the RedactingFormatter with a list of fields
+        to abfuscate
+
+        Arguments:
+        fields (List[str]): A list of strings representing
+            fields to abfuscate
+        """
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
 
     def format(self, record: logging.LogRecord) -> str:
+        """
+        Format the specified log record by obfuscating fields.
+
+        This method applies the filter_datum function to the formatted
+        log record to replace the values
+        of specified fields with the redaction string.
+
+        Arguments:
+        record (logging.LogRecord): The log record to format.
+
+        Returns:
+        str: The formatted and obfuscated log message.
+        """
         original_format = super().format(record)
         return filter_datum(self.fields, self.REDACTION,
                             original_format, self.SEPARATOR)
