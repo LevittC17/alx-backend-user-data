@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 This module provides a function to obfuscate fields in a log message.
 """
@@ -6,6 +6,7 @@ This module provides a function to obfuscate fields in a log message.
 import logging
 import re
 import os
+import datetime
 import mysql.connector
 from mysql.connector import connection
 from typing import List, Tuple
@@ -118,3 +119,39 @@ def get_db() -> connection.MySQLConnection:
         host=db_host,
         database=db_name
     )
+
+
+def main() -> None:
+    """
+    Main function to retrieve and display filtered user data
+    from the database
+    """
+    db: connection.MySQLConnection = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    for row in cursor:
+        print_filtered_row(row)
+    cursor.close()
+    db.close()
+
+
+def print_filtered_row(row: List[str]) -> None:
+    """
+    Print a database row with filtered fields.
+
+    Arguments:
+    row (List[str]): A list of strings representing the database row.
+    """
+    fields_to_filter = ["name", "email", "phone", "ssn", "password"]
+    # Convert all elements to string, especially the datetime object at index 6
+    row = [
+        str(item) if isinstance(
+            item,
+            datetime.datetime) else item for item in row]
+    filtered_row = "; ".join(
+        ["***" if i in fields_to_filter else row[i] for i in range(len(row))])
+    print(f"[HOLBERTON] user_data INFO {row[-2]}: {filtered_row};")
+
+
+if __name__ == "__main__":
+    main()
